@@ -4,6 +4,7 @@ package com.vecsight.commons.vslf.event.bus;
 import com.vecsight.commons.vslf.event.Event;
 import com.vecsight.commons.vslf.handler.Handler;
 import com.vecsight.commons.vslf.misc.LoggingLevel;
+import com.vecsight.commons.vslf.misc.Utils;
 
 import java.util.Collections;
 import java.util.Set;
@@ -45,15 +46,10 @@ public class ThreadPoolEventBus implements EventBus {
     @Override
     public void shutdown() {
         executor.shutdown();
-        try {
-            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-        } finally {
-            for (Handler handler : handlers) {
-                if (!handler.isShutdown()) {
-                    handler.onShutdown();
-                }
+        Utils.waitExecutorTerm(executor);
+        for (Handler handler : handlers) {
+            if (!handler.isShutdown()) {
+                handler.onShutdown();
             }
         }
     }
