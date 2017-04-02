@@ -11,6 +11,7 @@ public class DefaultGlobalEventBus {
     }
 
     public static void setEventBus(EventBus eventBus) {
+        if (eventBus != null) eventBus.shutdown();
         DefaultGlobalEventBus.eventBus = eventBus;
     }
 }
