@@ -13,6 +13,8 @@ import java.util.concurrent.Executors;
 
 public class SingleThreadedEventBus implements EventBus {
 
+    private boolean down = false;
+
     private LoggingLevel loggingLevel;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -21,6 +23,11 @@ public class SingleThreadedEventBus implements EventBus {
 
     public SingleThreadedEventBus(LoggingLevel loggingLevel) {
         this.loggingLevel = loggingLevel;
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (!isShutdown()) {
+                shutdown();
+            }
+        }));
     }
 
     @Override
@@ -43,6 +50,12 @@ public class SingleThreadedEventBus implements EventBus {
                 handler.onShutdown();
             }
         }
+        down = true;
+    }
+
+    @Override
+    public boolean isShutdown() {
+        return down;
     }
 
     @Override

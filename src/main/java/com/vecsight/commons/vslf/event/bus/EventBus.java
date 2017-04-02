@@ -10,6 +10,8 @@ public interface EventBus {
 
     void shutdown();
 
+    boolean isShutdown();
+
     void setLoggingLevel(LoggingLevel level);
 
     LoggingLevel getLoggingLevel();

@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ThreadPoolEventBus implements EventBus {
 
+    private boolean down = false;
+
     private LoggingLevel loggingLevel;
 
     private final ThreadPoolExecutor executor;
@@ -24,6 +26,11 @@ public class ThreadPoolEventBus implements EventBus {
     public ThreadPoolEventBus(LoggingLevel loggingLevel, ThreadPoolExecutor executor) {
         this.loggingLevel = loggingLevel;
         this.executor = executor;
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (!isShutdown()) {
+                shutdown();
+            }
+        }));
     }
 
     public ThreadPoolEventBus(LoggingLevel loggingLevel) {
@@ -52,6 +59,12 @@ public class ThreadPoolEventBus implements EventBus {
                 handler.onShutdown();
             }
         }
+        down = true;
+    }
+
+    @Override
+    public boolean isShutdown() {
+        return down;
     }
 
     @Override
