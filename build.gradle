@@ -3,11 +3,8 @@ version '1.0.0'
 
 apply plugin: 'java-library'
 apply plugin: 'java-library-distribution'
-apply plugin: 'application'
 
 sourceCompatibility = 1.8
-
-mainClassName = "com.vecsight.commons.vslf.Main"
 
 repositories {
     mavenCentral()

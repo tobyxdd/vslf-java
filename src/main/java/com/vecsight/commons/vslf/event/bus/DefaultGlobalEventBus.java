@@ -4,7 +4,7 @@ import com.vecsight.commons.vslf.misc.LoggingLevel;
 
 public class DefaultGlobalEventBus {
 
-    private static EventBus eventBus = new ThreadPoolEventBus(LoggingLevel.INFO);
+    private static EventBus eventBus = new SingleThreadedEventBus(LoggingLevel.INFO);
 
     public static EventBus getEventBus() {
         return eventBus;
