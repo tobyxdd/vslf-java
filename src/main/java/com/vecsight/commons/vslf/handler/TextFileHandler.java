@@ -21,7 +21,7 @@ public class TextFileHandler implements Handler {
     }
 
     public TextFileHandler(String filename, boolean append) throws IOException {
-        this(new TextLogEventFormatter(Constants.TEXT_FORMAT + "\n"), filename, append);
+        this(new TextLogEventFormatter(Constants.TEXT_FORMAT), filename, append);
     }
 
 
@@ -31,6 +31,7 @@ public class TextFileHandler implements Handler {
         synchronized (writer) {
             try {
                 writer.write(str);
+                writer.write("\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
