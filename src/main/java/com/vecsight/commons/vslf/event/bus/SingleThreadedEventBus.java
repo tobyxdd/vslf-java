@@ -17,12 +17,17 @@ public class SingleThreadedEventBus implements EventBus {
 
     private LoggingLevel loggingLevel;
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor;
 
     private Set<Handler> handlers = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     public SingleThreadedEventBus(LoggingLevel loggingLevel) {
         this.loggingLevel = loggingLevel;
+        this.executor = Executors.newSingleThreadExecutor(runnable -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+            thread.setDaemon(true);
+            return thread;
+        });
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (!isShutdown()) {
                 shutdown();

@@ -8,10 +8,7 @@ import com.vecsight.commons.vslf.misc.Utils;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class ThreadPoolEventBus implements EventBus {
 
@@ -36,7 +33,11 @@ public class ThreadPoolEventBus implements EventBus {
     public ThreadPoolEventBus(LoggingLevel loggingLevel) {
         this(loggingLevel, new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
                 Runtime.getRuntime().availableProcessors(), 10 * 1000, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>()));
+                new LinkedBlockingQueue<>(), runnable -> {
+            Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+            thread.setDaemon(true);
+            return thread;
+        }));
     }
 
     @Override
